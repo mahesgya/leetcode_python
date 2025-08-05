@@ -43,9 +43,40 @@ class Solution(object):
             return math.inf
         else:
             return nums[partition]
+        
+    def findMedianSortedArraysMoreEffective(self, nums1, nums2):
+        if len(nums1) > len(nums2):
+            return self.findMedianSortedArrays(nums2, nums1)
+        
+        m, n = len(nums1), len(nums2)
+        lo = 0
+        hi = m
+        half_len = (m + n + 1) // 2
+
+        while lo <= hi:
+            partitionX = (lo + hi) // 2
+            partitionY = half_len - partitionX
+
+            leftX = nums1[partitionX - 1] if partitionX != 0 else -math.inf
+            rightX = nums1[partitionX] if partitionX != m else math.inf
+            
+            leftY = nums2[partitionY - 1] if partitionY != 0 else -math.inf
+            rightY = nums2[partitionY] if partitionY != n else math.inf
+            
+            if(leftX <= rightY and leftY <= rightX):
+                if((m + n) % 2 == 0):
+                    return (max(leftX, leftY) + min(rightX, rightY))/2.0
+                else:
+                    return float(max(leftX, leftY))
+            elif leftX > rightY:
+                hi = partitionX - 1
+            else: 
+                lo = partitionX + 1
+                
+        return -1
 
 solution = Solution()
 nums1 = [2]
 nums2 = []
-result = solution.findMedianSortedArrays(nums1, nums2)
+result = solution.findMedianSortedArraysMoreEffective(nums1, nums2)
 print(result)
